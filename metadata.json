@@ -1,0 +1,6 @@
+{
+  "name": "Distributed Event Ingestion Engine",
+  "description": "High-throughput, low-latency telemetry and event ingestion engine featuring Go concurrency architecture, token bucket rate limiting, bounded worker pool, batch processing, structured logging, and interactive load testing suite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  ingestion-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - WORKER_POOL_SIZE=32
+      - CHANNEL_BUFFER_CAP=50000
+      - BATCH_THRESHOLD=5000
+      - BATCH_FLUSH_WINDOW_MS=500
+      - RATE_LIMIT_RPS=15000
+      - RATE_LIMIT_BURST=30000
+      - MONGO_URI=mongodb://root:example@mongodb:27017/telemetry_db?authSource=admin
+      - MONGO_DB=telemetry_db
+      - MONGO_COLLECTION=events_timeseries
+    depends_on:
+      - mongodb
+      - redis
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
+      - MONGO_INITDB_DATABASE=telemetry_db
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+
+volumes:
+  mongo_data:
